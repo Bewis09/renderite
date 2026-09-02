@@ -12,7 +12,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<DivElement<S, T, F, I>>) : RenderiteElement<S, DivElement<S, T, F, I>, T, F, I>(p) {
-    var onInit: Init.(Int) -> Unit = {}
+    var onInit: DivElement<S, T, F, I>.(Int) -> Unit = {}
     var gap: Int = 0
     var minElementSize: Int = 100
     var lines = 1
@@ -159,7 +159,7 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
 
     fun getElementsInLine(): Int = if (lineType == LineType.DEFINITE) lines else (getTotalLinesSpan() / (minElementSize + gap)).coerceAtLeast(1)
 
-    override fun Init.init() {
+    override fun init() {
         val cache = elementCache
 
         if (cacheChildren && cache != null) {
@@ -170,18 +170,6 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
         }
 
         updateSizeAndPosition()
-    }
-
-    fun <T> initForEach(collection: Collection<T>?, func: Init.(item: T) -> Unit) {
-        onInit = { collection?.forEach { this.func(it) } }
-    }
-
-    fun <T, L> initForEach(map: Map<T, L>?, func: Init.(item: Map.Entry<T, L>) -> Unit) {
-        onInit = { map?.forEach { this.func(it) } }
-    }
-
-    fun <T> initForEachIndexed(collection: Collection<T>?, func: Init.(i: Int, item: T) -> Unit) {
-        onInit = { collection?.forEachIndexed { i, item -> this.func(i, item) } }
     }
 
     override fun onMouseScroll(mouseX: Double, mouseY: Double, horizontalAmount: Double, verticalAmount: Double): Boolean {

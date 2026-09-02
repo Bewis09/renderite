@@ -9,7 +9,7 @@ import net.bewis09.renderite.logic.Animator
 import net.bewis09.renderite.logic.Color
 import net.bewis09.renderite.logic.FitType
 
-abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteElement<S, P, T, F, I>, T : Any, F, I: Any>(val props: Props<P> = {}) {
+abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteElement<S, P, T, F, I>, T : Any, F, I : Any>(val props: Props<P> = {}) {
     typealias Props<P> = P.() -> Unit
 
     companion object {
@@ -140,11 +140,9 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
             renderables.forEach { screenDrawing.drawBorder(it.x, it.y, it.width, it.height, Renderite.debugUpdateBorderColor()) }
     }
 
-    fun <A : RenderiteElement<S, *, T, F, I>> addRenderable(renderable: A): A = renderable.also { renderables.add(it) }
-
     fun resize() {
         renderables.clear()
-        Init().init()
+        init()
         hoverAnimation.pauseForOnce()
         lastUpdateTime = System.currentTimeMillis()
         onResize()
@@ -224,7 +222,7 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
 
     open fun initLogic() {}
 
-    open fun Init.init() {}
+    open fun init() {}
 
     fun mouseClick(mouseX: Double, mouseY: Double, button: Int): Boolean {
         if (!isMouseOver(mouseX, mouseY)) return false
@@ -304,20 +302,14 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
         @Suppress("UNCHECKED_CAST")
         p(this as P) ?: throw IllegalArgumentException("Required property is missing")
 
-    inner class Init {
-        operator fun invoke(init: Init.() -> Unit) {
-            this.init()
-        }
+    fun <Z: RenderiteElement<S, *, T, F, I>> addRenderable(renderable: Z): Z = renderable.also { renderables.add(it) }
+    fun addRenderables(renderable: Collection<RenderiteElement<S, *, T, F, I>>) = renderable.also { renderables.addAll(it) }
 
-        fun addRenderable(renderable: RenderiteElement<S, *, T, F, I>): RenderiteElement<S, *, T, F, I> = renderable.also { renderables.add(it) }
-        fun addRenderables(renderable: Collection<RenderiteElement<S, *, T, F, I>>) = renderable.also { renderables.addAll(it) }
+    fun RenderiteElement<S, *, T, F, I>.add(x: Int, y: Int, width: Int, height: Int) = this@RenderiteElement.addRenderable(this).updateBounds(x, y, width, height)
+    fun RenderiteElement<S, *, T, F, I>.addPositioned(x: Int, y: Int) = this@RenderiteElement.addRenderable(this).updatePosition(x, y)
+    fun <A : RenderiteElement<S, *, T, F, I>> A.add(): A = this@RenderiteElement.addRenderable(this)
 
-        fun RenderiteElement<S, *, T, F, I>.add(x: Int, y: Int, width: Int, height: Int) = this@RenderiteElement.addRenderable(this).updateBounds(x, y, width, height)
-        fun RenderiteElement<S, *, T, F, I>.addPositioned(x: Int, y: Int) = this@RenderiteElement.addRenderable(this).updatePosition(x, y)
-        fun <A: RenderiteElement<S, *, T, F, I>> A.add(): A = this@RenderiteElement.addRenderable(this)
-    }
-
-    fun Init.Div(recreateId: Number, p: Props<DivElement<S, T, F, I>>): RenderiteElement<S, *, T, F, I> {
+    fun Div(recreateId: Number, p: Props<DivElement<S, T, F, I>>): RenderiteElement<S, *, T, F, I> {
         if (recreationMap.containsKey(recreateId)) {
             return addRenderable(recreationMap[recreateId]!!)
         }
@@ -327,13 +319,13 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
         }
     }
 
-    fun Init.Div(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(p))
-    fun Init.Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(fullSizeProps() + p))
-    fun Init.Rectangle(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(fullSizeProps() + fun DivElement<S, T, F, I>.(){ fitType = FitType.FIT } + p))
-    fun Init.Image(p: Props<ImageElement<S, T, F, I>>) = addRenderable(ImageElement(fullSizeProps() + p))
-    fun Init.Empty(p: Props<EmptyElement<S, T, F, I>> = {}) = addRenderable(EmptyElement(fullSizeProps() + p))
+    fun Div(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(p))
+    fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(fullSizeProps() + p))
+    fun Rectangle(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(fullSizeProps() + fun DivElement<S, T, F, I>.() { fitType = FitType.FIT } + p))
+    fun Image(p: Props<ImageElement<S, T, F, I>>) = addRenderable(ImageElement(fullSizeProps() + p))
+    fun Empty(p: Props<EmptyElement<S, T, F, I>> = {}) = addRenderable(EmptyElement(fullSizeProps() + p))
 
-    class EmptyElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<EmptyElement<S, T, F, I>> = {}) : RenderiteElement<S, EmptyElement<S, T, F, I>, T, F, I>(p) {
+    class EmptyElement<S : RenderiteDrawer<I, T, F>, T : Any, F, I : Any>(p: Props<EmptyElement<S, T, F, I>> = {}) : RenderiteElement<S, EmptyElement<S, T, F, I>, T, F, I>(p) {
         init {
             this.props()
         }
@@ -343,7 +335,7 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
 
     fun removeFromCache(i: Int) = recreationMap.remove(i)
 
-    fun <T: RenderiteElement<*, *, *, *, *>> fullSizeProps() = fun T.() {
+    fun <T : RenderiteElement<*, *, *, *, *>> fullSizeProps() = fun T.() {
         x = this@RenderiteElement.x
         y = this@RenderiteElement.y
         width = this@RenderiteElement.width
