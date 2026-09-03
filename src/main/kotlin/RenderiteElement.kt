@@ -47,6 +47,7 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     var onResize = {}
 
     var animated: Props<P>? = null
+    var renderLogic: (P.(S) -> Unit)? = null
 
     var x: Int = 0
     var y: Int = 0
@@ -82,6 +83,8 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     fun render(screenDrawing: S, mouseX: Int, mouseY: Int) {
         @Suppress("UNCHECKED_CAST")
         animated?.invoke(this as P)
+        @Suppress("UNCHECKED_CAST")
+        renderLogic?.invoke(this as P, screenDrawing)
         hoverAnimation.set(if (isMouseOver(mouseX, mouseY) && screenDrawing.scissorContains(mouseX, mouseY)) 1f else 0f)
 
         screenDrawing.push()
