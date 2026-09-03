@@ -8,6 +8,7 @@ import net.bewis09.renderite.drawer.pushColor
 import net.bewis09.renderite.logic.Animator
 import net.bewis09.renderite.logic.Color
 import net.bewis09.renderite.logic.FitType
+import net.bewis09.renderite.style.RenderiteChild
 
 abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteElement<S, P, T, F, I>, T : Any, F, I : Any>(val props: Props<P> = {}) {
     typealias Props<P> = P.() -> Unit
@@ -309,6 +310,7 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     fun RenderiteElement<S, *, T, F, I>.addPositioned(x: Int, y: Int) = this@RenderiteElement.addRenderable(this).updatePosition(x, y)
     fun <A : RenderiteElement<S, *, T, F, I>> A.add(): A = this@RenderiteElement.addRenderable(this)
 
+    @RenderiteChild
     fun Div(recreateId: Number, p: Props<DivElement<S, T, F, I>>): RenderiteElement<S, *, T, F, I> {
         if (recreationMap.containsKey(recreateId)) {
             return addRenderable(recreationMap[recreateId]!!)
@@ -318,11 +320,15 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
             this@RenderiteElement.recreationMap[recreateId] = this
         }
     }
-
+    @RenderiteChild
     fun Div(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(p))
+    @RenderiteChild
     fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(fullSizeProps() + p))
+    @RenderiteChild
     fun Rectangle(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(fullSizeProps() + fun DivElement<S, T, F, I>.() { fitType = FitType.FIT } + p))
+    @RenderiteChild
     fun Image(p: Props<ImageElement<S, T, F, I>>) = addRenderable(ImageElement(fullSizeProps() + p))
+    @RenderiteChild
     fun Empty(p: Props<EmptyElement<S, T, F, I>> = {}) = addRenderable(EmptyElement(fullSizeProps() + p))
 
     class EmptyElement<S : RenderiteDrawer<I, T, F>, T : Any, F, I : Any>(p: Props<EmptyElement<S, T, F, I>> = {}) : RenderiteElement<S, EmptyElement<S, T, F, I>, T, F, I>(p) {
