@@ -145,6 +145,7 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
 
     fun resize() {
         renderables.clear()
+        initLogic()
         init()
         hoverAnimation.pauseForOnce()
         lastUpdateTime = System.currentTimeMillis()
