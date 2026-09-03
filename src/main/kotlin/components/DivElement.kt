@@ -192,6 +192,10 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
         updateSizeAndPosition()
     }
 
+    fun clearCache() {
+        elementCache = null
+    }
+
     override fun onMouseScroll(mouseX: Double, mouseY: Double, horizontalAmount: Double, verticalAmount: Double): Boolean {
         if (fitType != FitType.SCROLL) return false
         scrollAnimation.set((scrollAnimation.getWithoutInterpolation() + (verticalAmount.toFloat() * 30f) + (horizontalAmount.toFloat() * 30f)).coerceIn(0f.coerceAtMost((if (direction == Direction.HORIZONTAL) width else height) - innerSize), 0f))
