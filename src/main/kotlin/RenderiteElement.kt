@@ -34,6 +34,8 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     var pointerProvider = { shouldUsePointer }
     var overflowVisible = false
 
+    var fillParent = false
+
     var background: ((S) -> Unit) = { screenDrawing -> screenDrawing.fillWithBorder(x, y, width, height, backgroundColor(), borderColor()) }
     var backgroundColor = { Color.TRANSPARENT }
     var borderColor = { Color.TRANSPARENT }

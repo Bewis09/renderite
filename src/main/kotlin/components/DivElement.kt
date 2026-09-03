@@ -80,9 +80,13 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
 
         val fitHeight = (getOtherSpan() + gap) / elementsPerLine.toDouble() - gap
 
+        var fillElement: RenderiteElement<S, *, T, F, I>? = null
+
         for (it in ArrayList(renderables)) {
             val min = linePosition.minOrNull()?.toInt() ?: 0
             val lineIndex = linePosition.indexOf(min.toFloat())
+
+            if (it.fillParent) fillElement = it
 
             if (direction == Direction.VERTICAL) {
                 val startX = x + conPaddingStart() + (lineIndex * (elementSize + gap)).roundToInt()
@@ -143,6 +147,11 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
 
         if (fitType == FitType.SCROLL) {
             innerSize = ((linePosition.maxOrNull() ?: 0f) - gap + dirPaddingEnd()) - startScroll
+        } else if (fitType == FitType.FILL_ITEM) {
+            if (direction == Direction.HORIZONTAL)
+                fillElement?.updateWidth(width - elementSize.toInt() + fillElement.width)
+            else
+                fillElement?.updateHeight(height - elementSize.toInt() + fillElement.height)
         } else if (fitType == FitType.ENLARGE) {
             if (direction == Direction.HORIZONTAL)
                 width = (linePosition.maxOrNull() ?: 0f).toInt() - gap + dirPaddingEnd()
