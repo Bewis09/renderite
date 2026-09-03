@@ -152,9 +152,9 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
             innerSize = ((linePosition.maxOrNull() ?: 0f) - gap + dirPaddingEnd()) - startScroll
         } else if (fitType == FitType.FILL_ITEM) {
             if (direction == Direction.HORIZONTAL)
-                fillElement?.updateWidth(width - elementSize.toInt() + fillElement.width)
+                fillElement?.updateWidth(width - (linePosition.maxOrNull() ?: 0f).toInt() + fillElement.width - conPaddingEnd())
             else
-                fillElement?.updateHeight(height - elementSize.toInt() + fillElement.height)
+                fillElement?.updateHeight(height - (linePosition.maxOrNull() ?: 0f).toInt() + fillElement.height - conPaddingEnd())
         } else if (fitType == FitType.ENLARGE) {
             if (direction == Direction.HORIZONTAL)
                 width = (linePosition.maxOrNull() ?: 0f).toInt() - gap + dirPaddingEnd()
