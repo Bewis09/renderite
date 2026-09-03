@@ -81,12 +81,15 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
         val fitHeight = (getOtherSpan() + gap) / elementsPerLine.toDouble() - gap
 
         var fillElement: RenderiteElement<S, *, T, F, I>? = null
+        var maxOther = 0
 
         for (it in ArrayList(renderables)) {
             val min = linePosition.minOrNull()?.toInt() ?: 0
             val lineIndex = linePosition.indexOf(min.toFloat())
 
             if (it.fillParent) fillElement = it
+
+            maxOther = maxOf(maxOther, if (direction == Direction.VERTICAL) it.width else it.height)
 
             if (direction == Direction.VERTICAL) {
                 val startX = x + conPaddingStart() + (lineIndex * (elementSize + gap)).roundToInt()
@@ -158,6 +161,14 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
             else
                 height = (linePosition.maxOrNull() ?: 0f).toInt() - gap + dirPaddingEnd()
         }
+
+        if (lineType == LineType.ENLARGE) {
+            if (direction == Direction.HORIZONTAL) {
+                height = maxOther + conPaddingStart() + conPaddingEnd()
+            } else {
+                width = maxOther + conPaddingStart() + conPaddingEnd()
+            }
+        }
     }
 
     fun getTotalLinesSpan() = (if (direction == Direction.HORIZONTAL) height else width) - dirPaddingStart() - dirPaddingEnd()
@@ -166,7 +177,7 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
 
     fun getElementSize(): Double = (getTotalLinesSpan() + gap) / getElementsInLine().toDouble() - gap
 
-    fun getElementsInLine(): Int = if (lineType == LineType.DEFINITE) lines else (getTotalLinesSpan() / (minElementSize + gap)).coerceAtLeast(1)
+    fun getElementsInLine(): Int = if (lineType == LineType.DEFINITE) lines else if (lineType == LineType.ENLARGE) 1 else (getTotalLinesSpan() / (minElementSize + gap)).coerceAtLeast(1)
 
     override fun init() {
         val cache = elementCache
