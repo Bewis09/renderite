@@ -178,8 +178,6 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     }
 
     fun updateSize(width: Int, height: Int): RenderiteElement<S, P, T, F, I> {
-        if (width < 0) throw IllegalArgumentException("Width cannot be negative")
-        if (height < 0) throw IllegalArgumentException("Height cannot be negative")
         if (width == this.width && height == this.height) return this
 
         this.width = width
@@ -189,7 +187,6 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     }
 
     fun updateWidth(width: Int): RenderiteElement<S, P, T, F, I> {
-        if (width < 0) throw IllegalArgumentException("Width cannot be negative")
         if (width == this.width) return this
 
         this.width = width
@@ -198,7 +195,6 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     }
 
     fun updateHeight(height: Int): RenderiteElement<S, P, T, F, I> {
-        if (height < 0) throw IllegalArgumentException("Height cannot be negative")
         if (height == this.height) return this
 
         this.height = height
@@ -208,9 +204,6 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
 
     fun updateBounds(x: Int, y: Int, width: Int, height: Int): RenderiteElement<S, P, T, F, I> {
         if (x == this.x && y == this.y && width == this.width && height == this.height) return this
-
-        if (width < 0) throw IllegalArgumentException("Width cannot be negative")
-        if (height < 0) throw IllegalArgumentException("Height cannot be negative")
 
         this.x = x
         this.y = y
