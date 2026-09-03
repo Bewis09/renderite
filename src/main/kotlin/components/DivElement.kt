@@ -130,10 +130,10 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
                         it.updateY(startY)
                     }
                     ItemAlign.CENTER -> {
-                        it.updateY(startY + elementSize.toInt() / 2 - it.width / 2)
+                        it.updateY(startY + elementSize.toInt() / 2 - it.height / 2)
                     }
                     ItemAlign.END -> {
-                        it.updateY(startY + elementSize.toInt() - it.width)
+                        it.updateY(startY + elementSize.toInt() - it.height)
                     }
                 }
 
