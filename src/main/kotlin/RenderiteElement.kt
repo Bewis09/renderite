@@ -40,7 +40,7 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     var backgroundColor = { Color.TRANSPARENT }
     var borderColor = { Color.TRANSPARENT }
     var colorModifier = { Color(1f, 1f, 1f, 1f) }
-    var foreround: ((S) -> Unit) = {}
+    var foreground: ((S) -> Unit) = {}
 
     val internalWidthProvider = { it: Int, s: RenderiteElement<S, *, T, F, I> -> widthProvider?.invoke(s) ?: it }
     val internalHeightProvider = { it: Int, s: RenderiteElement<S, *, T, F, I> -> heightProvider?.invoke(s) ?: it }
@@ -103,7 +103,7 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
             this.renderBackground(screenDrawing, mouseX, mouseY)
             this.renderElement(screenDrawing, mouseX, mouseY)
             this.renderRenderables(screenDrawing, mouseX, mouseY)
-            foreround(screenDrawing)
+            foreground(screenDrawing)
             this.renderAccessories(screenDrawing, mouseX, mouseY)
             this.cleanup(screenDrawing, mouseX, mouseY)
             this.renderDebug(screenDrawing)
