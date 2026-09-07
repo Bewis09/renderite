@@ -44,6 +44,9 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     val internalWidthProvider = { it: Int, s: RenderiteElement<S, *, T, F, I> -> widthProvider?.invoke(s) ?: it }
     val internalHeightProvider = { it: Int, s: RenderiteElement<S, *, T, F, I> -> heightProvider?.invoke(s) ?: it }
 
+    var marginBefore = 0
+    var marginAfter = 0
+
     var onResize = {}
 
     var animated: Props<P>? = null

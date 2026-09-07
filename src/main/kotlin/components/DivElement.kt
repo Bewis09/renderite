@@ -110,13 +110,13 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
                     }
                 }
 
-                it.updateY(y + min)
+                it.updateY(y + min + it.marginBefore)
 
                 if (fitType == FitType.FIT) {
-                    it.updateHeight(fitHeight.toInt())
+                    it.updateHeight(fitHeight.toInt() - it.marginBefore - it.marginAfter)
                     linePosition[lineIndex] += fitHeight.toFloat() + gap
                 } else {
-                    linePosition[lineIndex] += it.height + gap
+                    linePosition[lineIndex] += it.height + gap + it.marginBefore + it.marginAfter
                 }
             } else {
                 val startY = y + conPaddingStart() + (lineIndex * (elementSize + gap)).roundToInt()
@@ -137,13 +137,13 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
                     }
                 }
 
-                it.updateX(x + min)
+                it.updateX(x + min + it.marginBefore)
 
                 if (fitType == FitType.FIT) {
-                    it.updateWidth(fitHeight.toInt())
+                    it.updateWidth(fitHeight.toInt() - it.marginBefore - it.marginAfter)
                     linePosition[lineIndex] += fitHeight.toFloat() + gap
                 } else {
-                    linePosition[lineIndex] += it.width + gap
+                    linePosition[lineIndex] += it.width + gap + it.marginBefore + it.marginAfter
                 }
             }
         }
