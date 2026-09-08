@@ -152,17 +152,17 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
         }
 
         if (fitType == FitType.SCROLL) {
-            innerSize = ((linePosition.maxOrNull() ?: 0f) - gap + dirPaddingEnd()) - startScroll
+            innerSize = ((linePosition.maxOrNull() ?: gap.toFloat()) - gap + dirPaddingEnd()) - startScroll
         } else if (fitType == FitType.FILL_ITEM) {
             if (direction == Direction.HORIZONTAL)
-                fillElement?.updateWidth(width - (linePosition.maxOrNull() ?: 0f).toInt() + fillElement.width - dirPaddingEnd())
+                fillElement?.updateWidth(width - (linePosition.maxOrNull() ?: gap.toFloat()).toInt() + gap + fillElement.width - dirPaddingEnd())
             else
-                fillElement?.updateHeight(height - (linePosition.maxOrNull() ?: 0f).toInt() + fillElement.height - dirPaddingEnd())
+                fillElement?.updateHeight(height - (linePosition.maxOrNull() ?: gap.toFloat()).toInt() + gap + fillElement.height - dirPaddingEnd())
         } else if (fitType == FitType.ENLARGE) {
             if (direction == Direction.HORIZONTAL)
-                width = (linePosition.maxOrNull() ?: 0f).toInt() - gap + dirPaddingEnd()
+                width = (linePosition.maxOrNull() ?: gap.toFloat()).toInt() - gap + dirPaddingEnd()
             else
-                height = (linePosition.maxOrNull() ?: 0f).toInt() - gap + dirPaddingEnd()
+                height = (linePosition.maxOrNull() ?: gap.toFloat()).toInt() - gap + dirPaddingEnd()
         }
 
         if (lineType == LineType.ENLARGE) {
