@@ -58,7 +58,7 @@ class TextElement<S : RenderiteDrawer<I, T, F>, T : Any, F, I : Any>(p: Props<Te
         screenDrawing.drawWrappedText(lines, x, y, getProperties())
 
         if (heightResize)
-            height = (lines.size * lineHeight * fontSize).toInt()
+            height = (lines.size * lineHeight * fontSize).toInt() + paddingTop() + paddingBottom()
     }
 
     fun getProperties(): TextDrawing.Properties<F> = {
