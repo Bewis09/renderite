@@ -54,6 +54,11 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     var animated: Props<P>? = null
     var renderLogic: (P.(S) -> Unit)? = null
 
+    var stageX: Int? = null
+    var stageY: Int? = null
+    var stageWidth: Int? = null
+    var stageHeight: Int? = null
+
     var x: Int = 0
     var y: Int = 0
     var width: Int = 0
@@ -160,6 +165,26 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
         lastUpdateTime = System.currentTimeMillis()
         onResize()
         ArrayList(renderables).forEach { it.resize() }
+    }
+
+    fun stageX(x: Int) {
+        stageX = x
+    }
+
+    fun stageY(y: Int) {
+        stageY = y
+    }
+
+    fun stageWidth(width: Int) {
+        stageWidth = width
+    }
+
+    fun stageHeight(height: Int) {
+        stageHeight = height
+    }
+
+    fun updateStage() {
+        updateBounds(stageX ?: x, stageY ?: y, stageWidth ?: width, stageHeight ?: height)
     }
 
     fun updateX(x: Int): RenderiteElement<S, P, T, F, I> {

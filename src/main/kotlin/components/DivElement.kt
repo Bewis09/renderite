@@ -99,24 +99,24 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
 
                 when (itemAlign) {
                     ItemAlign.STRETCH -> {
-                        it.updateWidth(elementSize.toInt())
-                        it.updateX(startX)
+                        it.stageWidth(elementSize.toInt())
+                        it.stageX(startX)
                     }
                     ItemAlign.START -> {
-                        it.updateX(startX)
+                        it.stageX(startX)
                     }
                     ItemAlign.CENTER -> {
-                        it.updateX(startX + elementSize.toInt() / 2 - it.width / 2)
+                        it.stageX(startX + elementSize.toInt() / 2 - it.width / 2)
                     }
                     ItemAlign.END -> {
-                        it.updateX(startX + elementSize.toInt() - it.width)
+                        it.stageX(startX + elementSize.toInt() - it.width)
                     }
                 }
 
-                it.updateY(y + min + it.marginBefore)
+                it.stageY(y + min + it.marginBefore)
 
                 if (fitType == FitType.FIT) {
-                    it.updateHeight(fitHeight.toInt() - it.marginBefore - it.marginAfter)
+                    it.stageHeight(fitHeight.toInt() - it.marginBefore - it.marginAfter)
                     linePosition[lineIndex] += fitHeight.toFloat() + gap
                 } else {
                     linePosition[lineIndex] += it.height + gap + it.marginBefore + it.marginAfter
@@ -126,24 +126,24 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
 
                 when (itemAlign) {
                     ItemAlign.STRETCH -> {
-                        it.updateHeight(elementSize.toInt())
-                        it.updateY(startY)
+                        it.stageHeight(elementSize.toInt())
+                        it.stageY(startY)
                     }
                     ItemAlign.START -> {
-                        it.updateY(startY)
+                        it.stageY(startY)
                     }
                     ItemAlign.CENTER -> {
-                        it.updateY(startY + elementSize.toInt() / 2 - it.height / 2)
+                        it.stageY(startY + elementSize.toInt() / 2 - it.height / 2)
                     }
                     ItemAlign.END -> {
-                        it.updateY(startY + elementSize.toInt() - it.height)
+                        it.stageY(startY + elementSize.toInt() - it.height)
                     }
                 }
 
-                it.updateX(x + min + it.marginBefore)
+                it.stageX(x + min + it.marginBefore)
 
                 if (fitType == FitType.FIT) {
-                    it.updateWidth(fitHeight.toInt() - it.marginBefore - it.marginAfter)
+                    it.stageWidth(fitHeight.toInt() - it.marginBefore - it.marginAfter)
                     linePosition[lineIndex] += fitHeight.toFloat() + gap
                 } else {
                     linePosition[lineIndex] += it.width + gap + it.marginBefore + it.marginAfter
@@ -155,9 +155,9 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
             innerSize = ((linePosition.maxOrNull() ?: gap.toFloat()) - gap + dirPaddingEnd()) - startScroll
         } else if (fitType == FitType.FILL_ITEM) {
             if (direction == Direction.HORIZONTAL)
-                fillElement?.updateWidth(width - (linePosition.maxOrNull() ?: gap.toFloat()).toInt() + gap + fillElement.width - dirPaddingEnd())
+                fillElement?.stageWidth(width - (linePosition.maxOrNull() ?: gap.toFloat()).toInt() + gap + fillElement.width - dirPaddingEnd())
             else
-                fillElement?.updateHeight(height - (linePosition.maxOrNull() ?: gap.toFloat()).toInt() + gap + fillElement.height - dirPaddingEnd())
+                fillElement?.stageHeight(height - (linePosition.maxOrNull() ?: gap.toFloat()).toInt() + gap + fillElement.height - dirPaddingEnd())
         } else if (fitType == FitType.ENLARGE) {
             if (direction == Direction.HORIZONTAL)
                 width = (linePosition.maxOrNull() ?: gap.toFloat()).toInt() - gap + dirPaddingEnd()
@@ -172,6 +172,8 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
                 width = maxOther + conPaddingStart() + conPaddingEnd()
             }
         }
+
+        renderables.forEach { it.updateStage() }
     }
 
     fun getTotalLinesSpan() = (if (direction == Direction.HORIZONTAL) height else width) - dirPaddingStart() - dirPaddingEnd()
