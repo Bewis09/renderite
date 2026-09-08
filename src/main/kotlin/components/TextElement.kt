@@ -14,7 +14,7 @@ class TextElement<S : RenderiteDrawer<I, T, F>, T : Any, F, I : Any>(p: Props<Te
     var color: Color? = null
     var font: F? = null
     var widthResize = false
-    var heightResize = true
+    var heightResize = false
     var textAlign = TextAlign.START
     var verticalAlign = TextAlign.CENTER
     var padding: Int = 0

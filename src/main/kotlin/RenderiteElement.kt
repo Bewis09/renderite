@@ -328,7 +328,7 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     @RenderiteChild
     fun Div(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(p))
     @RenderiteChild
-    fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(p))
+    fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(fullSizeProps() + p))
     @RenderiteChild
     fun Rectangle(p: Props<DivElement<S, T, F, I>>) = Div { fullSizeProps(); fitType = FitType.FIT; p() }
     @RenderiteChild
