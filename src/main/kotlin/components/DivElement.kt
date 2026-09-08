@@ -255,7 +255,7 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
     fun conPaddingEnd() = if (direction == Direction.HORIZONTAL) paddingBottom ?: verticalPadding ?: padding else paddingRight ?: horizontalPadding ?: padding
 
     @RenderiteChild
-    override fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(p))
+    override fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement { heightResize = true; p() })
     @RenderiteChild
     fun HorizontalLine(p: Props<DivElement<S, T, F, I>>) = Rectangle { height = 1; p() }
     @RenderiteChild
