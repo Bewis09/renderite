@@ -46,8 +46,9 @@ class Animator(val duration: () -> Long, val interpolationType: (delta: Float) -
     /**
      * Returns the current animated value for a given key.
      */
-    fun get(): Float {
-        provider?.let { set(it()) }
+    fun get(applyProvider: Boolean = true): Float {
+        if (applyProvider)
+            provider?.let { set(it()) }
         unpause()
         readTime = System.currentTimeMillis()
 
@@ -85,7 +86,7 @@ class Animator(val duration: () -> Long, val interpolationType: (delta: Float) -
 
         if (this.value == value) return
 
-        this.beforeValue = get()
+        this.beforeValue = get(false)
         this.value = value
         this.startTime = if (paused) 0 else System.currentTimeMillis()
 
