@@ -8,12 +8,13 @@ import net.bewis09.renderite.logic.Direction
 import net.bewis09.renderite.logic.FitType
 import net.bewis09.renderite.logic.ItemAlign
 import net.bewis09.renderite.logic.LineType
+import net.bewis09.renderite.logic.Padding
 import net.bewis09.renderite.style.RenderiteChild
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
 @Suppress("unused")
-open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<DivElement<S, T, F, I>>) : RenderiteElement<S, DivElement<S, T, F, I>, T, F, I>(p) {
+open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<DivElement<S, T, F, I>>) : RenderiteElement<S, DivElement<S, T, F, I>, T, F, I>(p), Padding {
     var onInit: DivElement<S, T, F, I>.(Int) -> Unit = {}
     var gap: Int = 0
     var minElementSize: Int = 100
@@ -35,13 +36,13 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
     private var hasScrollStartedVertical = false
     private var hasScrollStartedHorizontal = false
 
-    var padding: Int = 0
-    var verticalPadding: Int? = null
-    var horizontalPadding: Int? = null
-    var paddingLeft: Int? = null
-    var paddingTop: Int? = null
-    var paddingRight: Int? = null
-    var paddingBottom: Int? = null
+    override var padding: Int = 0
+    override var verticalPadding: Int? = null
+    override var horizontalPadding: Int? = null
+    override var paddingLeft: Int? = null
+    override var paddingTop: Int? = null
+    override var paddingRight: Int? = null
+    override var paddingBottom: Int? = null
 
     var paddingOverflowVisible = true
 
@@ -249,10 +250,10 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
         return true
     }
 
-    fun dirPaddingStart() = if (direction == Direction.HORIZONTAL) paddingLeft ?: horizontalPadding ?: padding else paddingTop ?: verticalPadding ?: padding
-    fun dirPaddingEnd() = if (direction == Direction.HORIZONTAL) paddingRight ?: horizontalPadding ?: padding else paddingBottom ?: verticalPadding ?: padding
-    fun conPaddingStart() = if (direction == Direction.HORIZONTAL) paddingTop ?: verticalPadding ?: padding else paddingLeft ?: horizontalPadding ?: padding
-    fun conPaddingEnd() = if (direction == Direction.HORIZONTAL) paddingBottom ?: verticalPadding ?: padding else paddingRight ?: horizontalPadding ?: padding
+    fun dirPaddingStart() = if (direction == Direction.HORIZONTAL) paddingLeft() else paddingTop()
+    fun dirPaddingEnd() = if (direction == Direction.HORIZONTAL) paddingRight() else paddingBottom()
+    fun conPaddingStart() = if (direction == Direction.HORIZONTAL) paddingTop() else paddingLeft()
+    fun conPaddingEnd() = if (direction == Direction.HORIZONTAL) paddingBottom() else paddingRight()
 
     @RenderiteChild
     override fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement { heightResize = true; p() })
