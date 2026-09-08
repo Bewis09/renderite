@@ -8,9 +8,11 @@ import net.bewis09.renderite.logic.Direction
 import net.bewis09.renderite.logic.FitType
 import net.bewis09.renderite.logic.ItemAlign
 import net.bewis09.renderite.logic.LineType
+import net.bewis09.renderite.style.RenderiteChild
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
+@Suppress("unused")
 open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<DivElement<S, T, F, I>>) : RenderiteElement<S, DivElement<S, T, F, I>, T, F, I>(p) {
     var onInit: DivElement<S, T, F, I>.(Int) -> Unit = {}
     var gap: Int = 0
@@ -251,4 +253,11 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
     fun dirPaddingEnd() = if (direction == Direction.HORIZONTAL) paddingRight ?: horizontalPadding ?: padding else paddingBottom ?: verticalPadding ?: padding
     fun conPaddingStart() = if (direction == Direction.HORIZONTAL) paddingTop ?: verticalPadding ?: padding else paddingLeft ?: horizontalPadding ?: padding
     fun conPaddingEnd() = if (direction == Direction.HORIZONTAL) paddingBottom ?: verticalPadding ?: padding else paddingRight ?: horizontalPadding ?: padding
+
+    @RenderiteChild
+    override fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(p))
+    @RenderiteChild
+    fun HorizontalLine(p: Props<DivElement<S, T, F, I>>) = Rectangle { height = 1; p() }
+    @RenderiteChild
+    fun VerticalLine(p: Props<DivElement<S, T, F, I>>) = Rectangle { width = 1; p() }
 }
