@@ -260,4 +260,6 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
     fun HorizontalLine(p: Props<DivElement<S, T, F, I>>) = Rectangle { height = 1; p() }
     @RenderiteChild
     fun VerticalLine(p: Props<DivElement<S, T, F, I>>) = Rectangle { width = 1; p() }
+    @RenderiteChild
+    fun Gap(size: Int) = Rectangle { width = size; height = size; }
 }
