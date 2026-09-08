@@ -8,15 +8,19 @@ package net.bewis09.renderite.logic
  * @param interpolationType A function that takes a delta value (0 to 1) and returns an interpolated value.
  * @param value The starting value of the animation.
  */
+@Suppress("unused")
 class Animator(val duration: () -> Long, val interpolationType: (delta: Float) -> Float = LINEAR, private var value: Float) {
-    constructor(
-        duration: Long, interpolationType: (delta: Float) -> Float = LINEAR, value: Float
-    ) : this({ duration }, interpolationType, value)
+    constructor(duration: Long, interpolationType: (delta: Float) -> Float = LINEAR, value: Float) : this({ duration }, interpolationType, value)
+
+    constructor(duration: () -> Long, interpolationType: (delta: Float) -> Float = LINEAR, provider: () -> Float) : this(duration, interpolationType, provider()) {
+        this.provider = provider
+    }
 
     private var startTime: Long = 0
     private var beforeValue: Float = value
     private var onFinish: (Animator.() -> Unit)? = null
     private var paused = false
+    private var provider: (() -> Float)? = null
 
     companion object {
         val LINEAR = { delta: Float -> delta }
@@ -42,6 +46,7 @@ class Animator(val duration: () -> Long, val interpolationType: (delta: Float) -
      * Returns the current animated value for a given key.
      */
     fun get(): Float {
+        provider?.let { set(it()) }
         unpause()
 
         val delta = (System.currentTimeMillis() - startTime) / duration().toFloat()
