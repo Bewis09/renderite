@@ -89,6 +89,7 @@ class Animator(val duration: () -> Long, val interpolationType: (delta: Float) -
         this.beforeValue = get(false)
         this.value = value
         this.startTime = if (paused) 0 else System.currentTimeMillis()
+        this.readTime = System.currentTimeMillis()
 
         executeFinishAction()
     }
