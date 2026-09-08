@@ -21,6 +21,7 @@ class Animator(val duration: () -> Long, val interpolationType: (delta: Float) -
     private var onFinish: (Animator.() -> Unit)? = null
     private var paused = false
     private var provider: (() -> Float)? = null
+    private var readTime: Long = Long.MAX_VALUE
 
     companion object {
         val LINEAR = { delta: Float -> delta }
@@ -48,6 +49,7 @@ class Animator(val duration: () -> Long, val interpolationType: (delta: Float) -
     fun get(): Float {
         provider?.let { set(it()) }
         unpause()
+        readTime = System.currentTimeMillis()
 
         val delta = (System.currentTimeMillis() - startTime) / duration().toFloat()
 
@@ -78,8 +80,8 @@ class Animator(val duration: () -> Long, val interpolationType: (delta: Float) -
      * Sets a value in the animation map.
      * @param value The value to set.
      */
-    fun set(value: Float) {
-        val paused = unpause()
+    fun set(value: Float, autoPause: Boolean = true) {
+        val paused = unpause() || (System.currentTimeMillis() - readTime > duration() * 2 && autoPause)
 
         if (this.value == value) return
 
