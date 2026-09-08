@@ -10,6 +10,7 @@ import net.bewis09.renderite.logic.Color
 import net.bewis09.renderite.logic.FitType
 import net.bewis09.renderite.style.RenderiteChild
 
+@Suppress("unused")
 abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteElement<S, P, T, F, I>, T : Any, F, I : Any>(val props: Props<P> = {}) {
     typealias Props<P> = P.() -> Unit
 
@@ -327,13 +328,17 @@ abstract class RenderiteElement<S : RenderiteDrawer<I, T, F>, P : RenderiteEleme
     @RenderiteChild
     fun Div(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(p))
     @RenderiteChild
-    fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(fullSizeProps() + p))
+    fun Text(p: Props<TextElement<S, T, F, I>>) = addRenderable(TextElement(p))
     @RenderiteChild
-    fun Rectangle(p: Props<DivElement<S, T, F, I>>) = addRenderable(DivElement(fullSizeProps() + fun DivElement<S, T, F, I>.() { fitType = FitType.FIT } + p))
+    fun Rectangle(p: Props<DivElement<S, T, F, I>>) = Div { fullSizeProps(); fitType = FitType.FIT; p() }
     @RenderiteChild
     fun Image(p: Props<ImageElement<S, T, F, I>>) = addRenderable(ImageElement(fullSizeProps() + p))
     @RenderiteChild
     fun Empty(p: Props<EmptyElement<S, T, F, I>> = {}) = addRenderable(EmptyElement(fullSizeProps() + p))
+    @RenderiteChild
+    fun HorizontalLine(p: Props<DivElement<S, T, F, I>>) = Rectangle { height = 1; p() }
+    @RenderiteChild
+    fun VerticalLine(p: Props<DivElement<S, T, F, I>>) = Rectangle { width = 1; p() }
 
     class EmptyElement<S : RenderiteDrawer<I, T, F>, T : Any, F, I : Any>(p: Props<EmptyElement<S, T, F, I>> = {}) : RenderiteElement<S, EmptyElement<S, T, F, I>, T, F, I>(p) {
         init {
