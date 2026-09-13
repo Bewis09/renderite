@@ -88,7 +88,9 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
 
         for (it in ArrayList(renderables)) {
             if (screenDrawing != null && mouseX != null && mouseY != null) {
+                screenDrawing.push()
                 it.renderLogic(screenDrawing, mouseX, mouseY)
+                screenDrawing.pop()
             }
 
             val min = linePosition.minOrNull()?.toInt() ?: 0
