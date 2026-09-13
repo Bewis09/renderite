@@ -182,9 +182,9 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
         renderables.forEach { it.updateStage() }
     }
 
-    fun getTotalLinesSpan() = (if (direction == Direction.HORIZONTAL) height else width) - dirPaddingStart() - dirPaddingEnd()
+    fun getTotalLinesSpan() = (if (direction == Direction.HORIZONTAL) height else width) - conPaddingStart() - conPaddingEnd()
 
-    fun getOtherSpan() = (if (direction == Direction.HORIZONTAL) width else height) - conPaddingStart() - conPaddingEnd()
+    fun getOtherSpan() = (if (direction == Direction.HORIZONTAL) width else height) - dirPaddingStart() - dirPaddingEnd()
 
     fun getElementSize(): Double = (getTotalLinesSpan() + gap) / getElementsInLine().toDouble() - gap
 
