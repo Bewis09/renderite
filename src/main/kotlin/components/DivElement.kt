@@ -58,7 +58,7 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
     }
 
     override fun renderLogic(screenDrawing: S, mouseX: Int, mouseY: Int) {
-        updateSizeAndPosition()
+        updateSizeAndPosition(screenDrawing, mouseX, mouseY)
     }
 
     override fun cleanup(screenDrawing: S, mouseX: Int, mouseY: Int) {
@@ -76,7 +76,7 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
         }
     }
 
-    fun updateSizeAndPosition() {
+    fun updateSizeAndPosition(screenDrawing: S? = null, mouseX: Int? = null, mouseY: Int? = null) {
         val elementSize = getElementSize()
         val startScroll = scrollAnimation.get().toInt()
         val linePosition = Array(getElementsInLine()) { startScroll.toFloat() + dirPaddingStart() }
@@ -87,6 +87,10 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
         var maxOther = 0
 
         for (it in ArrayList(renderables)) {
+            if (screenDrawing != null && mouseX != null && mouseY != null) {
+                it.renderLogic(screenDrawing, mouseX, mouseY)
+            }
+
             val min = linePosition.minOrNull()?.toInt() ?: 0
             val lineIndex = linePosition.indexOf(min.toFloat())
 

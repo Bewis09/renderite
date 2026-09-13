@@ -4,6 +4,7 @@ import net.bewis09.renderite.Renderite
 import net.bewis09.renderite.RenderiteElement
 import net.bewis09.renderite.drawer.RenderiteDrawer
 import net.bewis09.renderite.drawer.TextDrawing
+import net.bewis09.renderite.logic.CacheBox
 import net.bewis09.renderite.logic.Color
 import net.bewis09.renderite.logic.Padding
 import net.bewis09.renderite.logic.TextAlign
@@ -30,23 +31,26 @@ class TextElement<S : RenderiteDrawer<I, T, F>, T : Any, F, I : Any>(p: Props<Te
     var shadow = false
     var fontSize: Float = Renderite.defaultFontSize
 
+    val lines = CacheBox<S, List<T>>(
+        { if (wrap) it.wrapText(textProvider(), width - paddingLeft() - paddingRight(), getProperties()) else listOf(textProvider()) },
+        { width }, { paddingLeft() }, { paddingRight() }, { wrap }, { textProvider() }, { font }, { fontSize }, { color }, { shadow }, { textAlign }, { lineHeight }
+    )
+
     init {
         props()
     }
 
     override fun renderLogic(screenDrawing: S, mouseX: Int, mouseY: Int) {
-        if (widthResize) {
-            width = screenDrawing.getTextWidth(textProvider(), getProperties()).toInt()
-        }
+        if (widthResize) width = screenDrawing.getTextWidth(textProvider(), getProperties()).toInt()
+
+        if (heightResize) height = (lines(screenDrawing).size * lineHeight * fontSize).toInt() + paddingTop() + paddingBottom()
     }
 
     override fun renderElement(screenDrawing: S, mouseX: Int, mouseY: Int) {
-        val lines = if (wrap) screenDrawing.wrapText(textProvider(), width - paddingLeft() - paddingRight(), getProperties()) else listOf(textProvider())
-
         val y = when (verticalAlign) {
             TextAlign.START -> this.y.toFloat() + (paddingTop())
-            TextAlign.CENTER -> centerY - lines.size / 2f * lineHeight * fontSize + (paddingTop()) / 2f - (paddingBottom()) / 2f
-            TextAlign.END -> this.y2.toFloat() - lines.size * lineHeight * fontSize - (paddingBottom())
+            TextAlign.CENTER -> centerY - lines(screenDrawing).size / 2f * lineHeight * fontSize + (paddingTop()) / 2f - (paddingBottom()) / 2f
+            TextAlign.END -> this.y2.toFloat() - lines(screenDrawing).size * lineHeight * fontSize - (paddingBottom())
         }
 
         val x = when (textAlign) {
@@ -55,10 +59,7 @@ class TextElement<S : RenderiteDrawer<I, T, F>, T : Any, F, I : Any>(p: Props<Te
             TextAlign.END -> x2 - paddingRight().toFloat()
         }
 
-        screenDrawing.drawWrappedText(lines, x, y, getProperties())
-
-        if (heightResize)
-            height = (lines.size * lineHeight * fontSize).toInt() + paddingTop() + paddingBottom()
+        screenDrawing.drawWrappedText(lines(screenDrawing), x, y, getProperties())
     }
 
     fun getProperties(): TextDrawing.Properties<F> = {
