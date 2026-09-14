@@ -14,6 +14,7 @@ object Renderite {
     var debugUpdateBorderColor = { Color.RED alpha 0.2f }
     var hoverTime = { 150L }
     var scrollAnimationTime = { 200L }
+    var mainMouseButtonCode = { 0 }
 
     /**
      * Whether the elements are only generating for data analysis purposes (e.g. translations or structure plans)

@@ -214,7 +214,7 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
     }
 
     override fun onMouseRelease(mouseX: Double, mouseY: Double, button: Int) {
-        if (button != 0 || fitType != FitType.SCROLL) return
+        if (button != Renderite.mainMouseButtonCode() || fitType != FitType.SCROLL) return
 
         lastDragX = null
         lastDragY = null
@@ -226,7 +226,7 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
     }
 
     override fun onMouseClick(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        if (button != 0 || fitType != FitType.SCROLL) return false
+        if (button != Renderite.mainMouseButtonCode() || fitType != FitType.SCROLL) return false
 
         lastDragX = null
         lastDragY = null
@@ -238,7 +238,7 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
     }
 
     override fun onMouseDrag(mouseX: Double, mouseY: Double, startX: Double, startY: Double, button: Int): Boolean {
-        if (button != 0 || fitType != FitType.SCROLL) return false
+        if (button != Renderite.mainMouseButtonCode() || fitType != FitType.SCROLL) return false
 
         if (abs(startX - mouseX) > 5 && direction == Direction.HORIZONTAL) hasScrollStartedHorizontal = true
         if (abs(startY - mouseY) > 5 && direction == Direction.VERTICAL) hasScrollStartedVertical = true
