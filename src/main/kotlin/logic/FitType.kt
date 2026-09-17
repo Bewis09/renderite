@@ -4,5 +4,6 @@ enum class FitType {
     ENLARGE,
     FIT,
     FILL_ITEM,
-    SCROLL
+    SCROLL,
+    CENTER
 }

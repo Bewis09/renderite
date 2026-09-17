@@ -169,6 +169,17 @@ open class DivElement<S: RenderiteDrawer<I, T, F>, T: Any, F, I: Any>(p: Props<D
                 width = (linePosition.maxOrNull() ?: gap.toFloat()).toInt() - gap + dirPaddingEnd()
             else
                 height = (linePosition.maxOrNull() ?: gap.toFloat()).toInt() - gap + dirPaddingEnd()
+        } else if (fitType == FitType.CENTER) {
+            val size = (linePosition.maxOrNull() ?: gap.toFloat()) - gap + dirPaddingEnd()
+            val start = ((if (direction == Direction.HORIZONTAL) width else height) / 2f - size / 2).toInt()
+
+            renderables.forEach {
+                if (direction == Direction.VERTICAL) {
+                    it.stageY((it.stageY ?: it.y) + start)
+                } else {
+                    it.stageX((it.stageX ?: it.x) + start)
+                }
+            }
         }
 
         if (lineType == LineType.ENLARGE) {
